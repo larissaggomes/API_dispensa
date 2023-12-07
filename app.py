@@ -25,10 +25,15 @@ def obter_produtos():
 #consultar(por id)
 @app.route('/produtos/<int:id>',methods=['GET'])
 def obter_produto_por_id(id):
+    res = ""
     resultado = ler()
     for produto in resultado:
         if produto["id"] == id:
-            return produto  
+            res = produto
+    
+    return Response(
+        response=json.dumps(res), status=200,  mimetype="text/plain")
+          
         
 #editar
 @app.route('/produtos/<int:id>',methods=['PUT'])
