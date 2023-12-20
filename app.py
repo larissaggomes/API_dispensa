@@ -1,14 +1,24 @@
-from flask import Flask, Response, jsonify, request, json
-from flask_cors import CORS, cross_origin
+from flask import Flask, Response, request, json
+from flask_cors import CORS
+import time
 
 app = Flask(__name__)
 cors = CORS(app)
+DB = "dbdata.json"
+
+def generateId():
+    # pegando a data e hora em formato timestamp (migrosegundos)
+    timestamp = time.time()
+    # removendo o ponto que separa os segundos
+    timestamp = str(timestamp).replace('.','')
+    # retornado o valor
+    return timestamp
 
 #lista de produtos
 @app.route('/internal')
 def ler():
     try:
-        with open("teste.json", "r") as arquivo:
+        with open(DB, "r") as arquivo:
             json_objeto = json.load(arquivo)
         return json_objeto
     except IOError:
@@ -28,7 +38,7 @@ def obter_produto_por_id(id):
     res = ""
     resultado = ler()
     for produto in resultado:
-        if produto["id"] == id:
+        if int(produto["id"]) == int(id):
             res = produto
     
     return Response(
@@ -41,24 +51,34 @@ def editar_produto_por_id(id):
     produto_alterado = request.get_json()
     resultado = ler()
     for produto in resultado:
-        if produto["id"] == id:
+        if int(produto["id"]) == int(id):
             produto["nome"] = produto_alterado["nome"]
             produto["preco"] = produto_alterado["preco"] 
     json_objeto = json.dumps(resultado, indent=4)
 
-    with open("teste.json", "w") as arquivo:
+    with open(DB, "w") as arquivo:
         arquivo.write(json_objeto)
         return produto_alterado
     
 #criar 
 @app.route('/produtos',methods=['POST'])    
 def incluir_novo_produto():
-    novo_produto = request.get_json()
-    resultado = ler()
-    resultado.append(novo_produto)
-    json_objeto = json.dumps(resultado, indent=4)
+    # pegando a lista de produtos do banco de dados
+    produtos = ler()
 
-    with open("teste.json", "w") as arquivo:
+    # pegando os dados do produtos que veio no body da requisição
+    novo_produto = request.get_json()
+    # gerando e adicionado um novo id para o produto
+    novo_produto['id'] = generateId()
+
+    # adicionado o novo produto na lista de produtos
+    produtos.append(novo_produto)
+    # convertendo a lista de produtos em objetos json
+    json_objeto = json.dumps(produtos, indent=4)
+
+    # abrindo o banco de dados no modo escrita(W)
+    with open(DB, "w") as arquivo:
+        # escrevendo no arquivo a lista de produtos
         arquivo.write(json_objeto)
     
     
@@ -68,14 +88,29 @@ def incluir_novo_produto():
 #excluir
 @app.route('/produtos/<int:id>',methods=['DELETE'])
 def excluir_produto(id):
-    resultado = ler()
-    for indice,produto in enumerate(resultado):
-        if produto["id"] == id:
-            del resultado[indice]
-    json_objeto = json.dumps(resultado, indent=4)
+    # pegando a lista de produtos do banco de dados
+    # a partir do metodo ler
+    produtos = ler()
+
+    # fazendo um loop na lista de produtos
+    for indice,produto in enumerate(produtos):
+
+        # comparando se o id do banco é igual
+        # ao id enviando pela reguisição
+        if int(produto["id"]) == int(id):
+
+            # removendo o produto da lista a partir do indice (posição)
+            del produtos[indice]
+
+    # convertendo a lista de produtos em um objeto no formato texto
+    json_objeto = json.dumps(produtos, indent=4)
     
-    with open("teste.json", "w") as arquivo:
+    # abrindo o arquivo de banco de dados no modo escrita(W)
+    with open(DB, "w") as arquivo:
+        # escrevando o objeto json no arquivo
         arquivo.write(json_objeto)
-        return Response(content_type=True, status=200)
+
+        # retornado uma resposta para o frontend
+        return Response(response=json.dumps(True), status=200,  mimetype="text/plain")
     
 app.run(port=4000,host='localhost', debug=True)    
