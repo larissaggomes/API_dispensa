@@ -1,9 +1,37 @@
 [
     {
-        "estoque": {},
-        "estoqueMinimo": {},
-        "id": "17042054623106709",
+        "estoque": "2",
+        "estoqueMinimo": "4",
+        "id": "1704205697070615",
         "nome": "Carne",
         "preco": "11"
+    },
+    {
+        "estoque": "8",
+        "estoqueMinimo": "7",
+        "id": "17042249773044462",
+        "nome": "Leite",
+        "preco": "23"
+    },
+    {
+        "estoque": "6",
+        "estoqueMinimo": "8",
+        "id": "1704225075370446",
+        "nome": "Sabao em po",
+        "preco": "22"
+    },
+    {
+        "estoque": "4",
+        "estoqueMinimo": "6",
+        "id": "17042251191324449",
+        "nome": "Amaciante",
+        "preco": "24"
+    },
+    {
+        "estoque": "5",
+        "estoqueMinimo": "3",
+        "id": "17042252155719652",
+        "nome": "Pasta de dente",
+        "preco": "21"
     }
 ]
