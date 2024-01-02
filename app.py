@@ -27,10 +27,17 @@ def ler():
 #consultar(todos)
 @app.route('/produtos', methods=['GET'])
 def obter_produtos():
-    resultado = ler()
+    args = request.args
+    produtos = ler()
+
+    if args.get('filter'):
+        if args.get('filter') == 'relatorio':
+            for indice,produto in enumerate(produtos):
+                if produto['estoque'] > produto['estoqueMinimo']:
+                    del produtos[indice] 
 
     return Response(
-        response=json.dumps(resultado), status=200,  mimetype="text/plain")
+        response=json.dumps(produtos), status=200,  mimetype="text/plain")
     
 #consultar(por id)
 @app.route('/produtos/<int:id>',methods=['GET'])
