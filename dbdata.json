@@ -1,17 +1,9 @@
 [
     {
-        "id": "17030841514168549",
-        "nome": "Pasta de dente",
-        "preco": "12,00"
-    },
-    {
-        "id": "17030843942812598",
-        "nome": "Frango",
-        "preco": "14,30"
-    },
-    {
-        "id": "17030844182640262",
-        "nome": "Leite",
-        "preco": "10,99"
+        "estoque": {},
+        "estoqueMinimo": {},
+        "id": "17042054623106709",
+        "nome": "Carne",
+        "preco": "11"
     }
 ]

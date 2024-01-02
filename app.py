@@ -54,6 +54,8 @@ def editar_produto_por_id(id):
         if int(produto["id"]) == int(id):
             produto["nome"] = produto_alterado["nome"]
             produto["preco"] = produto_alterado["preco"] 
+            produto["estoqueMinimo"] = produto_alterado["estoqueMinimo"]
+            produto["estoque"] = produto_alterado["estoque"]
     json_objeto = json.dumps(resultado, indent=4)
 
     with open(DB, "w") as arquivo:
